@@ -16,7 +16,7 @@
     <header>
       <nav>
         <div class="nav-wrapper black darken-4">
-          <a href="#!" class="center brand-logo"> TV Cidade Verde </a>
+          <a href="#!" class="center brand-logo"> Operador </a>
         </div>
       </nav>
     </header>
@@ -35,7 +35,7 @@
 
             </div>
             <div class="center card-action">
-              <a class="waves-effect waves-light btn" id="open-room"><i class="material-icons left">cloud</i>Criar</a>
+              <a class="btn-floating btn-large waves-effect waves-light green darken-1 z-depth-2 pulse" id="open-room"><i class="material-icons">cloud_queue</i></a>
             </div>
           </div>
         </div>
@@ -72,7 +72,7 @@
 
 var connection = new RTCMultiConnection();
 
-connection.socketURL = 'https://sputnikcv.ddns.net:8888/';
+connection.socketURL = 'https://srcv.ddns.net:8888/';
 
 connection.socketMessageEvent = 'audio-conference-demo';
 

@@ -29,7 +29,7 @@
         <div class="col s12 m12 l12">
           <div class="card z-depth-2">
             <div class="card-content black-text">
-
+              <input type="text" id="room-id" value="123" autocorrect="off" autocapitalize="off" size="20">
               <a class="modal-trigger col s12 m12 l12 center-align " href="#modal1">Informação do Stream</a>
               </br><h6 class="center-align" id="status-cliente">Link Parado</h6></br>
 
@@ -84,7 +84,7 @@
       $("#close-room").hide();
 
       document.getElementById('join-room').onclick = function() {
-         connection.join("yqECwA7tJALqr3F6Pr8d");
+         connection.join(document.getElementById('room-id').value);
          $("#join-room").hide();
          $("#close-room").show();
          $("#list-host").show();
@@ -99,7 +99,8 @@
 
         var connection = new RTCMultiConnection();
 
-        connection.socketURL = 'https://srcv.ddns.net:8888';
+        connection.socketURL = 'https://srcv.ddns.net:8888/';
+
 
         connection.socketMessageEvent = 'audio-conference-demo';
 
@@ -144,6 +145,83 @@
                 mediaElement.parentNode.removeChild(mediaElement);
             }
         };
+
+        function disableInputButtons() {
+            $("#open-room").addClass('disabled');
+          }
+
+        // ......................................................
+        // ......................Handling Room-ID................
+        // ......................................................
+
+        function showRoomURL(roomid) {
+            var roomHashURL = '#' + roomid;
+            var roomQueryStringURL = '?roomid=' + roomid;
+
+            var html = '<h2>Unique URL for your room:</h2><br>';
+
+            html += 'Hash URL: <a href="' + roomHashURL + '" target="_blank">' + roomHashURL + '</a>';
+            html += '<br>';
+            html += 'QueryString URL: <a href="' + roomQueryStringURL + '" target="_blank">' + roomQueryStringURL + '</a>';
+
+            var roomURLsDiv = document.getElementById('room-urls');
+            roomURLsDiv.innerHTML = html;
+
+            roomURLsDiv.style.display = 'block';
+        }
+
+        (function() {
+            var params = {},
+                r = /([^&=]+)=?([^&]*)/g;
+
+            function d(s) {
+                return decodeURIComponent(s.replace(/\+/g, ' '));
+            }
+            var match, search = window.location.search;
+            while (match = r.exec(search.substring(1)))
+                params[d(match[1])] = d(match[2]);
+            window.params = params;
+        })();
+
+        var roomid = '';
+        if (localStorage.getItem(connection.socketMessageEvent)) {
+            roomid = localStorage.getItem(connection.socketMessageEvent);
+        } else {
+            roomid = connection.token();
+        }
+        document.getElementById('room-id').value = roomid;
+        document.getElementById('room-id').onkeyup = function() {
+            localStorage.setItem(connection.socketMessageEvent, this.value);
+        };
+
+        var hashString = location.hash.replace('#', '');
+        if (hashString.length && hashString.indexOf('comment-') == 0) {
+            hashString = '';
+        }
+
+        var roomid = params.roomid;
+        if (!roomid && hashString.length) {
+            roomid = hashString;
+        }
+
+        if (roomid && roomid.length) {
+            document.getElementById('room-id').value = roomid;
+            localStorage.setItem(connection.socketMessageEvent, roomid);
+
+            // auto-join-room
+            (function reCheckRoomPresence() {
+                connection.checkPresence(roomid, function(isRoomExist) {
+                    if (isRoomExist) {
+                        connection.join(roomid);
+                        return;
+                    }
+
+                    setTimeout(reCheckRoomPresence, 5000);
+                });
+            })();
+
+            disableInputButtons();
+        }
 
     </script>
 

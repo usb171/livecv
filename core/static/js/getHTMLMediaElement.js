@@ -469,7 +469,6 @@ function getAudioElement(mediaElement, config) {
 
     div_header.innerHTML = config.title;
     div_header.className = 'collapsible-header';
-
     div_body.className = 'collapsible-body';
 
     span.appendChild(mediaElement);
