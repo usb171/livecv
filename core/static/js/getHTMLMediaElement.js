@@ -463,6 +463,8 @@ function getAudioElement(mediaElement, config) {
     var nuvem = document.createElement('i');
     var span = document.createElement('span');
 
+    li.id = config.title;
+
     li.appendChild(div_header);
     li.appendChild(div_body);
     div_body.appendChild(span);

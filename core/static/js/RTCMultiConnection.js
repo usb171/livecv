@@ -5854,14 +5854,17 @@ window.RTCMultiConnection = function(roomid, forceOptions) {
         };
 
         connection.onUserStatusChanged = function(event, dontWriteLogs) {
-            if (!!connection.enableLogs && !dontWriteLogs) {
+            if (!!connection.enableLogs && !dontWriteLogs){
+
                 console.info(event.userid, event.status);
-                /*document.getElementById('status-cliente').innerHTML = event.status;
-                if(event.status == "online"){
-                  document.getElementById('status-cliente').setAttribute('style', 'color: green;')
-                }else{
-                  document.getElementById('status-cliente').setAttribute('style', 'color: red;')
-                }*/
+
+                var no = document.getElementById(event.userid);
+                if(no) if(no.parentNode) no.parentNode.removeChild(no);
+                // if(event.status == "offline"){
+                //   var li = document.getElementById(event.userid);
+                //   var ul = document.getElementById("audios-container-ul");
+                //   ul.parentNode.removeChild(li);
+                // }
             }
         };
 

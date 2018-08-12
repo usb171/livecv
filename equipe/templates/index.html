@@ -9,6 +9,11 @@
     <!--Import materialize.css-->
     <link type="text/css" rel="stylesheet" href="{% static 'css/materialize.css' %}"  media="screen,projection"/>
     <!--Let browser know website is optimized for mobile-->
+    <!-- <link type="text/css" rel="stylesheet" href="{% static 'css/custom.css' %}"/> -->
+    <link rel="stylesheet" href="{% static 'css/typing.css' %}">
+    <link rel="stylesheet" href="{% static 'css/getHTMLMediaElement.css' %}">
+
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   </head>
 
@@ -18,7 +23,7 @@
       <nav>
         <div class="nav-wrapper green darken-2 z-depth-3">
           <a href="#!" class="center brand-logo ">
-             AudioLive
+            <div class="center-align" id="titulo"></div>
           </a>
         </div>
       </nav>
@@ -29,20 +34,16 @@
         <div class="col s12 m12 l12">
           <div class="card z-depth-2">
             <div class="card-content black-text">
-              <input type="text" id="room-id" value="123" autocorrect="off" autocapitalize="off" size="20">
-              <a class="modal-trigger col s12 m12 l12 center-align " href="#modal1">Informação do Stream</a>
-              </br><h6 class="center-align" id="status-cliente">Link Parado</h6></br>
-
+            <a class="modal-trigger col s12 m12 l12 center-align " href="#modal1">Informação do Stream</a></br>
+              <h6 class="center-align red-text text-darken-2" id="status-cliente">OffLine</h6></br>
               <div class="row" id="list-host" hidden>
                 <div class="col s12 m12 l12" id="audios-container">
                   <ul class="collapsible expandable" id=audios-container-ul></ul>
                 </div>
               </div>
-
             </div>
             <div class="center card-action">
-              <a class="btn-floating btn-large waves-effect waves-light green darken-1 z-depth-2 pulse" id="join-room"><i class="material-icons">cloud_queue</i></a>
-              <a class="btn-floating btn-large waves-effect waves-light red darken-1 z-depth-2 pulse" id="close-room"><i class="material-icons">cloud_off</i></a>
+              <a class="btn-floating btn-large waves-effect waves-light red darken-1 z-depth-2" id="join-room"><i class="material-icons" id="icon-cloud">cloud_off</i></a>
             </div>
           </div>
         </div>
@@ -63,45 +64,36 @@
       </div>
     </div>
 
-
     <script src="{% static 'js/RTCMultiConnection.js' %}"></script>
     <script src="{% static 'js/adapter.js' %}"></script>
     <script src="{% static 'js/socket.io.js' %}"></script>
-
-
-    <link rel="stylesheet" href="{% static 'css/getHTMLMediaElement.css' %}">
-
     <script src="{% static 'js/getHTMLMediaElement.js' %}"></script>
-
     <script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
+    <!-- <script src="{% static 'js/canvas.js' %}"></script> -->
     <script src="{% static 'js/materialize.min.js' %}"></script>
-
+    <script src="{% static 'js/typing.js' %}"></script>
     <script src="{% static 'js/custom.js' %}"></script>
-
 
     <script>
 
-      $("#close-room").hide();
+      _$("titulo", 100, 800)
+        .type("Audio Live").wait(300).speed(100)
 
+      var clik = false
       document.getElementById('join-room').onclick = function() {
-         connection.join(document.getElementById('room-id').value);
-         $("#join-room").hide();
-         $("#close-room").show();
-         $("#list-host").show();
-         document.getElementById("status-cliente").innerHTML="Conectando...";
-         document.getElementById("status-cliente").setAttribute('style', 'color: blue;');
+         if(!clik){
+           connection.join("x");
+           $("#list-host").show();
+           // document.getElementById("join-room").classList.remove("green");
+           // document.getElementById("join-room").classList.add("red");
+           clik = !clik;
+         }else{
+           location.reload();
+         }
       };
 
-      $('#close-room').click(function() {
-        location.reload();
-      });
-
-
         var connection = new RTCMultiConnection();
-        //connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
-        connection.socketURL = 'https://srcv.ddns.net:8888/';
-
-
+        connection.socketURL = 'https://rtcmulticonnection.herokuapp.com:443/';
         connection.socketMessageEvent = 'audio-conference-demo';
 
 
@@ -120,6 +112,9 @@
             OfferToReceiveVideo: false
         };
 
+        var countConnect = 0;
+
+
         connection.audiosContainer = document.getElementById('audios-container');
         connection.onstream = function(event) {
             var width = parseInt(connection.audiosContainer.clientWidth / 2) - 20;
@@ -131,6 +126,16 @@
             });
 
             connection.audiosContainer.appendChild(mediaElement);
+            countConnect += 1;
+            if(countConnect > 1){
+              $("#icon-cloud").html("cloud_queue");
+              $("#join-room").removeClass("red");
+              $("#join-room").addClass("green pulse");
+
+              $("#status-cliente").html("OnLine");
+              $("#status-cliente").removeClass("red-text text-darken-2");
+              $("#status-cliente").addClass("green-text text-darken-2");
+            }
 
             setTimeout(function() {
                 mediaElement.media.play();
@@ -143,89 +148,19 @@
             var mediaElement = document.getElementById(event.streamid);
             if (mediaElement) {
                 mediaElement.parentNode.removeChild(mediaElement);
+                countConnect -= 1;
+                if(countConnect < 2){
+                  location.reload();
+
+                 $("#status-cliente").html("OffLine");
+                 $("#status-cliente").removeClass("green-text text-darken-2");
+                 $("#status-cliente").addClass("red-text text-darken-2");
+               }
             }
         };
 
-        function disableInputButtons() {
-            $("#open-room").addClass('disabled');
-          }
-
-        // ......................................................
-        // ......................Handling Room-ID................
-        // ......................................................
-
-        function showRoomURL(roomid) {
-            var roomHashURL = '#' + roomid;
-            var roomQueryStringURL = '?roomid=' + roomid;
-
-            var html = '<h2>Unique URL for your room:</h2><br>';
-
-            html += 'Hash URL: <a href="' + roomHashURL + '" target="_blank">' + roomHashURL + '</a>';
-            html += '<br>';
-            html += 'QueryString URL: <a href="' + roomQueryStringURL + '" target="_blank">' + roomQueryStringURL + '</a>';
-
-            var roomURLsDiv = document.getElementById('room-urls');
-            roomURLsDiv.innerHTML = html;
-
-            roomURLsDiv.style.display = 'block';
-        }
-
-        (function() {
-            var params = {},
-                r = /([^&=]+)=?([^&]*)/g;
-
-            function d(s) {
-                return decodeURIComponent(s.replace(/\+/g, ' '));
-            }
-            var match, search = window.location.search;
-            while (match = r.exec(search.substring(1)))
-                params[d(match[1])] = d(match[2]);
-            window.params = params;
-        })();
-
-        var roomid = '';
-        if (localStorage.getItem(connection.socketMessageEvent)) {
-            roomid = localStorage.getItem(connection.socketMessageEvent);
-        } else {
-            roomid = connection.token();
-        }
-        document.getElementById('room-id').value = roomid;
-        document.getElementById('room-id').onkeyup = function() {
-            localStorage.setItem(connection.socketMessageEvent, this.value);
-        };
-
-        var hashString = location.hash.replace('#', '');
-        if (hashString.length && hashString.indexOf('comment-') == 0) {
-            hashString = '';
-        }
-
-        var roomid = params.roomid;
-        if (!roomid && hashString.length) {
-            roomid = hashString;
-        }
-
-        if (roomid && roomid.length) {
-            document.getElementById('room-id').value = roomid;
-            localStorage.setItem(connection.socketMessageEvent, roomid);
-
-            // auto-join-room
-            (function reCheckRoomPresence() {
-                connection.checkPresence(roomid, function(isRoomExist) {
-                    if (isRoomExist) {
-                        connection.join(roomid);
-                        return;
-                    }
-
-                    setTimeout(reCheckRoomPresence, 5000);
-                });
-            })();
-
-            disableInputButtons();
-        }
 
     </script>
-
-    <script src="https://cdn.webrtc-experiment.com/common.js"></script>
 
   </body>
 </html>
