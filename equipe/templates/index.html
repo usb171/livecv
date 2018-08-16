@@ -1,29 +1,20 @@
 <!DOCTYPE html>
 {% load static %}
-
 <html>
   <head>
     <title>TV Cidade Verde</title>
-    <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!--Import materialize.css-->
     <link type="text/css" rel="stylesheet" href="{% static 'css/materialize.css' %}"  media="screen,projection"/>
-    <!--Let browser know website is optimized for mobile-->
-    <!-- <link type="text/css" rel="stylesheet" href="{% static 'css/custom.css' %}"/> -->
-    <link rel="stylesheet" href="{% static 'css/typing.css' %}">
     <link rel="stylesheet" href="{% static 'css/getHTMLMediaElement.css' %}">
-
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   </head>
 
   <body>
-
     <header>
       <nav>
         <div class="nav-wrapper green darken-2 z-depth-3">
           <a href="#!" class="center brand-logo ">
-            <div class="center-align" id="titulo"></div>
+            <div class="center-align" id="titulo">Audio Live</div>
           </a>
         </div>
       </nav>
@@ -34,7 +25,7 @@
         <div class="col s12 m12 l12">
           <div class="card z-depth-2">
             <div class="card-content black-text">
-            <a class="modal-trigger col s12 m12 l12 center-align " href="#modal1">Informação do Stream</a></br>
+            <a class="modal-trigger col s12 m12 l12 center-align " href="#modal1">{{salas}}</a></br>
               <h6 class="center-align red-text text-darken-2" id="status-cliente">OffLine</h6></br>
               <div class="row" id="list-host" hidden>
                 <div class="col s12 m12 l12" id="audios-container">
@@ -52,10 +43,11 @@
 
     <div id="modal1" class="modal">
       <div class="modal-content">
-        <h5 class="center">Stream Info</h5>
-        <p>Token: yqECwA7tJALqr3F6Pr8d</p>
-        <p>Usuário: nilton</p>
-        <p>Cargo: Cinegrafista</p>
+        <h6 class="center-align">Informações da sessão</h6>
+        <p>Nome: {{ user.first_name }}</p>
+        <p>Sobrenome: {{ user.last_name }}</p>
+        <p>Sala: {{ salas }}</p>
+        <p>Email: {{ user.email }}</p>
         <p>Cliente: TV Cidade Verde</p>
       </div>
       <div class="modal-footer center">
@@ -71,21 +63,15 @@
     <script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
     <!-- <script src="{% static 'js/canvas.js' %}"></script> -->
     <script src="{% static 'js/materialize.min.js' %}"></script>
-    <script src="{% static 'js/typing.js' %}"></script>
     <script src="{% static 'js/custom.js' %}"></script>
 
     <script>
 
-      _$("titulo", 100, 800)
-        .type("Audio Live").wait(300).speed(100)
-
       var clik = false
       document.getElementById('join-room').onclick = function() {
          if(!clik){
-           connection.join("x");
+           connection.join("{{salas}}");
            $("#list-host").show();
-           // document.getElementById("join-room").classList.remove("green");
-           // document.getElementById("join-room").classList.add("red");
            clik = !clik;
          }else{
            location.reload();
@@ -104,17 +90,15 @@
 
         connection.mediaConstraints = {
             audio: true,
-            video: false
+            video: false,
         };
 
         connection.sdpConstraints.mandatory = {
             OfferToReceiveAudio: true,
-            OfferToReceiveVideo: false
+            OfferToReceiveVideo: false,
         };
 
         var countConnect = 0;
-
-
         connection.audiosContainer = document.getElementById('audios-container');
         connection.onstream = function(event) {
             var width = parseInt(connection.audiosContainer.clientWidth / 2) - 20;

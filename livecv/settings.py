@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '^yjb-%nh%&v0m(t)f=o-=u#b#(6!7+j1jsvba1sy^-j@0v(2nk'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -40,8 +40,10 @@ INSTALLED_APPS = [
 
     'sslserver',
     'core',
+    'usuario',
     'equipe',
     'suite',
+    'sala',
 ]
 
 MIDDLEWARE = [
@@ -88,6 +90,9 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
+
+# AUTH_USER_MODEL = 'usuario.User'
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
