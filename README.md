@@ -1,4 +1,24 @@
 
+
+
+
+
+
+
+
+pip3 install django==2.0.7
+pip3 install gunicorn
+
+$ sudo apt-get update
+$ sudo apt-get instala software-propriedades-comum
+$ sudo add-apt-repositório ppa: certbot / certbot
+$ sudo apt-get update
+$ sudo apt-get instala o python-certbot-nginx 
+
+
+
+
+
     server {
         listen 80;
         server_name srcv.ddns.net;
