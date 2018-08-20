@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '^yjb-%nh%&v0m(t)f=o-=u#b#(6!7+j1jsvba1sy^-j@0v(2nk'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'sslserver',
+    #'sslserver',
     'core',
     'usuario',
     'equipe',
@@ -127,9 +127,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
-STATIC_URL = '/livecv/static/'
-STATIC_ROOT = '/livecv/static/'
+STATIC_URL = '/static/'
+STATIC_ROOT =  os.path.join(BASE_DIR, 'static/')
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media_cdn")
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+#MEDIA_URL = "/media/"
+#MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media_cdn")
+#STATIC_ROOT = os.path.join(BASE_DIR, "static/")

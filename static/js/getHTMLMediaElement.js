@@ -2,6 +2,7 @@
 // getHTMLMediaElement.js
 
 function getHTMLMediaElement(mediaElement, config) {
+
     config = config || {};
 
     if (!mediaElement.nodeName || (mediaElement.nodeName.toLowerCase() != 'audio' && mediaElement.nodeName.toLowerCase() != 'video')) {
@@ -336,6 +337,8 @@ function getHTMLMediaElement(mediaElement, config) {
 // getAudioElement.js
 
 function getAudioElement(mediaElement, config) {
+
+
     config = config || {};
 
     if (!mediaElement.nodeName || (mediaElement.nodeName.toLowerCase() != 'audio' && mediaElement.nodeName.toLowerCase() != 'video')) {
@@ -363,15 +366,15 @@ function getAudioElement(mediaElement, config) {
     };
 
     var mediaElementContainer = document.createElement('div');
-    mediaElementContainer.className = 'media-container';
+    //mediaElementContainer.className = 'media-container';
 
     var mediaControls = document.createElement('div');
     mediaControls.className = 'media-controls';
-    mediaElementContainer.appendChild(mediaControls);
+    // mediaElementContainer.appendChild(mediaControls);
 
     var muteAudio = document.createElement('div');
     muteAudio.className = 'control ' + (config.toggle.has('mute-audio') ? 'unmute-audio selected' : 'mute-audio');
-    mediaControls.appendChild(muteAudio);
+    // mediaControls.appendChild(muteAudio);
 
     muteAudio.style['border-top-left-radius'] = '5px';
 
@@ -406,7 +409,7 @@ function getAudioElement(mediaElement, config) {
     var volumeSlider = document.createElement('div');
     volumeSlider.className = 'control volume-slider';
     volumeSlider.style.width = 'auto';
-    mediaControls.appendChild(volumeSlider);
+    //mediaControls.appendChild(volumeSlider);
 
     var slider = document.createElement('input');
     slider.style.marginTop = '11px';
@@ -427,7 +430,7 @@ function getAudioElement(mediaElement, config) {
 
     var stop = document.createElement('div');
     stop.className = 'control stop';
-    mediaControls.appendChild(stop);
+    //mediaControls.appendChild(stop);
 
     stop.onclick = function() {
         mediaElementContainer.style.opacity = 0;
@@ -444,14 +447,36 @@ function getAudioElement(mediaElement, config) {
 
     var mediaBox = document.createElement('div');
     mediaBox.className = 'media-box';
-    mediaElementContainer.appendChild(mediaBox);
+    //mediaElementContainer.appendChild(mediaBox);
 
     var h2 = document.createElement('h2');
-    h2.innerHTML = config.title || 'Audio Element';
+    h2.innerHTML = config.title || 'Audio Element'; // config.title corresponde o nome da sala
     h2.setAttribute('style', 'position: absolute;color: rgb(160, 160, 160);font-size: 20px;text-shadow: 1px 1px rgb(255, 255, 255);padding:0;margin:0;');
-    mediaBox.appendChild(h2);
+    //mediaBox.appendChild(h2);
 
-    mediaBox.appendChild(mediaElement);
+    var audioContainerUl = document.getElementById('audios-container-ul');
+
+
+    var li = document.createElement('li');
+    var div_header = document.createElement('div');
+    var div_body = document.createElement('div');
+    var nuvem = document.createElement('i');
+    var span = document.createElement('span');
+
+    li.id = config.title;
+
+    li.appendChild(div_header);
+    li.appendChild(div_body);
+    div_body.appendChild(span);
+
+    div_header.innerHTML = config.title;
+    div_header.className = 'collapsible-header';
+    div_body.className = 'collapsible-body';
+
+    span.appendChild(mediaElement);
+    mediaElement.setAttribute('style', ' width: 100%;');
+    span.appendChild(mediaElement);
+    audioContainerUl.appendChild(li);
 
     mediaElementContainer.style.width = '329px';
     mediaBox.style.height = '90px';
