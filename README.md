@@ -20,8 +20,8 @@
 
     nano /etc/nginx/sites-available/nginx.conf
     ln -s /etc/nginx/sites-available/nginx.conf /etc/nginx/sites-enabled/
-
-
+    certbot --nginx
+    
 
 
     server {
