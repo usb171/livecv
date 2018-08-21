@@ -18,7 +18,8 @@
     $ sudo apt-get install python-certbot-nginx 
     $ sudo apt-get install nginx
 
-
+    nano /etc/nginx/sites-available/nginx.conf
+    ln -s /etc/nginx/sites-available/nginx.conf /etc/nginx/sites-enabled/
 
 
 
