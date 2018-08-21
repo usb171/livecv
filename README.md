@@ -70,3 +70,7 @@
         location /static {
             alias /home/srcv/livecv/static;
         }
+        
+        
+        gunicorn --workers=8 --bind=0.0.0.0:8000 livecv.wsgi
+
